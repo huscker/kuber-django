@@ -1,0 +1,17 @@
+[tool.poetry]
+name = "kuber-django"
+version = "0.1.0"
+description = ""
+authors = ["huscker <egostalker03@mail.ru>"]
+readme = "README.md"
+packages = [{include = "kuber_django"}]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+django = "^4.1.7"
+django-environ = "^0.10.0"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
