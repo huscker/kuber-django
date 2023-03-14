@@ -46,7 +46,7 @@ spec:
 kind: Service
 apiVersion: v1
 metadata:
-  name: postgres
+  name: postgres-service
 spec:
   selector:
     app: postgres
