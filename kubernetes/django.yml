@@ -53,13 +53,13 @@ kind: Ingress
 metadata:
   name: django-ingress
   annotations:
-    nginx.ingress.kubernetes.io/rewrite-target: /$1
+    nginx.ingress.kubernetes.io/rewrite-target: /
 spec:
   rules:
     - host: huscker.com
       http:
         paths:
-          - path: /api
+          - path: /
             pathType: Prefix
             backend:
               service:

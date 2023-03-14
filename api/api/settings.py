@@ -29,12 +29,13 @@ SECRET_KEY = 'django-insecure-43oxl2nynbk#6$cd89wxjn!fe*dv6_9h7^u0a6n%yt8kjf(@+%
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['huscker.com', '127.0.0.1']
 
 
 # Application definition
 
 INSTALLED_APPS = [
+    'ping',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
