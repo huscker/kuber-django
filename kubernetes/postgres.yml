@@ -1,9 +1,10 @@
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
   name: postgres
 spec:
   replicas: 1
+  serviceName: "postgres"
   selector:
     matchLabels:
       app: postgres
@@ -37,11 +38,30 @@ spec:
           volumeMounts:
             - name: postgres-volume-data
               mountPath: /var/lib/postgresql/data
-
-      volumes:
-        - name: postgres-volume-data
-          persistentVolumeClaim:
-            claimName: postgres-pvc
+  volumeClaimTemplates:
+    - metadata:
+        name: postgres-volume-data
+      spec:
+        accessModes: [ "ReadWriteOnce" ]
+        storageClassName: "standard"
+        resources:
+          requests:
+            storage: 1Gi
+---
+kind: PersistentVolume
+apiVersion: v1
+metadata:
+  name: postgres-data
+spec:
+  storageClassName: standard
+  capacity:
+    storage: 3Gi
+  volumeMode: Filesystem
+  persistentVolumeReclaimPolicy: Retain
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: /mnt/data
 ---
 kind: Service
 apiVersion: v1
@@ -54,14 +74,3 @@ spec:
     - protocol: TCP
       port: 5432
       targetPort: 5432
----
-kind: PersistentVolumeClaim
-apiVersion: v1
-metadata:
-   name: postgres-pvc
-spec:
-   accessModes:
-      - ReadWriteMany
-   resources:
-      requests:
-         storage: 3Gi
