@@ -18,7 +18,7 @@ spec:
     spec:
       containers:
         - name: {{ .Values.django.container.name }}
-          image: {{ .Values.django.image.repository}}:{{ .Values.image.tag }}
+          image: {{ .Values.django.image.repository}}:{{ .Values.django.image.tag }}
           imagePullPolicy: {{ .Values.django.image.pullPolicy }}
           ports:
             - containerPort: {{ .Values.django.container.port }}
@@ -36,4 +36,4 @@ spec:
             - name: {{ .Values.django.env.db_name }}
               value: {{ .Values.postgres.env.name }}
             - name: {{ .Values.django.env.db_host }}
-              value: {{ .Values.postgres.service.name }}
+              value: {{.Release.Name}}-{{ .Values.postgres.service.name }}

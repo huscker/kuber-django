@@ -7,7 +7,7 @@ spec:
     app: {{ .Values.django.labels.app }}
   ports:
     - protocol: TCP
-      port: {{ .Values.service.port }}
+      port: {{ .Values.django.service.port }}
       targetPort: {{ .Values.django.container.port }}
 ---
 kind: Service

@@ -16,7 +16,7 @@ spec:
             pathType: {{ $path.pathType }}
             backend:
               service:
-                name: {{ .Release.Name }}-{{ .Values.django.service.name }}
+                name: {{ $.Release.Name }}-{{ $.Values.django.service.name }}
                 port:
-                  number: {{ .Values.django.service.port }}
+                  number: {{ $.Values.django.service.port }}
         {{- end}}
