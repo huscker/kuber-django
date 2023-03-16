@@ -1,11 +1,11 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Values.django.name  }}
-  {{ with .Values.django.labels }}
+  name: {{.Release.Name}}-{{ .Values.django.name  }}
+  {{- with .Values.django.labels }}
   labels:
     app: {{ .app }}
-  {{ end }}
+  {{ end -}}
 spec:
   replicas: {{ .Values.django.replicaCount }}
   selector:
