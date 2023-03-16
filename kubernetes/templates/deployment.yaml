@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.django.name  }}
+  {{ with .Values.django.labels }}
+  labels:
+    app: {{ .app }}
+  {{ end }}
+spec:
+  replicas: {{ .Values.django.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ .Values.django.labels.app }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.django.labels.app }}
+    spec:
+      containers:
+        - name: {{ .Values.django.container.name }}
+          image: {{ .Values.django.image.repository}}:{{ .Values.image.tag }}
+          imagePullPolicy: {{ .Values.django.image.pullPolicy }}
+          ports:
+            - containerPort: {{ .Values.django.container.port }}
+          env:
+            - name: {{ .Values.django.env.db_user | upper }}
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.credentials.name }}
+                  key: {{ .Values.credentials.postgres.user }}
+            - name: {{ .Values.django.env.db_pass | upper }}
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.credentials.name }}
+                  key: {{ .Values.credentials.postgres.password }}
+            - name: {{ .Values.django.env.db_name }}
+              value: {{ .Values.postgres.env.name }}
+            - name: {{ .Values.django.env.db_host }}
+              value: {{ .Values.postgres.service.name }}
