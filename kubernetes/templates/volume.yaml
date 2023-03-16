@@ -1,7 +1,7 @@
 kind: PersistentVolume
 apiVersion: v1
 metadata:
-  name: {{ .Release.Name }}-{{ .Values.resources.name }}
+  name: {{ .Release.Name }}-{{ .Values.resources.storages.postgres.name }}
 spec:
   storageClassName: {{ .Values.resources.storages.postgres.storageClass }}
   capacity:

@@ -1,22 +1,20 @@
 django:
-  name: django
+  name: django-deployment
   labels:
-    app: name
+    app: django
   replicaCount: 1
   image:
-    repository: huscker/django:latest
+    repository: huscker/django
     pullPolicy: IfNotPresent
     tag: latest
-  container:
-    name: django
-    port: 8000
+  port: 8000
   env:
     db_user: DATABASE_USER
     db_pass: DATABASE_PASS
     db_name: DATABASE_NAME
     db_host: DATABASE_HOST
   service:
-    name: django-services
+    name: django-service
     port: 80
 credentials:
   name: postgres-credentials
@@ -25,18 +23,16 @@ credentials:
     user: user
     password: password
 postgres:
-  name: postgres
+  name: postgres-statefulset
   serviceName: postgres
   replicaCount: 1
-  container:
-    name: postgres
-    port: 5432
+  port: 5432
   image:
     repository: postgres
     pullPolicy: IfNotPresent
     tag: 15
   labels:
-    backend: postgres
+    app: postgres
   service:
     name: postgres-service
     port: 5432
@@ -64,7 +60,7 @@ ingress:
 resources:
   storages:
     postgres:
-      name: postgres-data
+      name: postgres-volume
       storageClass: standard
       capacity: 3Gi
       volumeMode: Filesystem

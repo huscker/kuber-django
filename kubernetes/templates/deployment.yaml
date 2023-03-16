@@ -1,11 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{.Release.Name}}-{{ .Values.django.name  }}
-  {{- with .Values.django.labels }}
-  labels:
-    app: {{ .app }}
-  {{ end -}}
+  name: {{ .Release.Name }}-{{ .Values.django.name  }}
 spec:
   replicas: {{ .Values.django.replicaCount }}
   selector:
@@ -17,23 +13,23 @@ spec:
         app: {{ .Values.django.labels.app }}
     spec:
       containers:
-        - name: {{ .Values.django.container.name }}
+        - name: {{ .Values.django.labels.app }}
           image: {{ .Values.django.image.repository}}:{{ .Values.django.image.tag }}
           imagePullPolicy: {{ .Values.django.image.pullPolicy }}
           ports:
-            - containerPort: {{ .Values.django.container.port }}
+            - containerPort: {{ .Values.django.port }}
           env:
             - name: {{ .Values.django.env.db_user | upper }}
               valueFrom:
                 secretKeyRef:
-                  name: {{ .Values.credentials.name }}
+                  name: {{ .Release.Name}}-{{ .Values.credentials.name }}
                   key: {{ .Values.credentials.postgres.user }}
             - name: {{ .Values.django.env.db_pass | upper }}
               valueFrom:
                 secretKeyRef:
-                  name: {{ .Values.credentials.name }}
+                  name: {{ .Release.Name}}-{{ .Values.credentials.name }}
                   key: {{ .Values.credentials.postgres.password }}
             - name: {{ .Values.django.env.db_name }}
               value: {{ .Values.postgres.env.name }}
             - name: {{ .Values.django.env.db_host }}
-              value: {{.Release.Name}}-{{ .Values.postgres.service.name }}
+              value: {{ .Release.Name }}-{{ .Values.postgres.service.name }}

@@ -7,32 +7,31 @@ spec:
   serviceName: {{ .Values.postgres.serviceName }}
   selector:
     matchLabels:
-      app: {{ .Values.django.labels.app }}
-      backend: {{ .Values.postgres.labels.backend }}
+      app: {{ .Values.postgres.labels.app }}
   template:
     metadata:
       labels:
-        app: {{ .Values.django.labels.app }}
+        app: {{ .Values.postgres.labels.app }}
     spec:
       containers:
-        - name: {{ .Values.postgres.container.name }}
+        - name: {{ .Values.postgres.labels.app }}
           image: {{ .Values.postgres.image.repository }}:{{ .Values.postgres.image.tag }}
           imagePullPolicy: {{ .Values.postgres.image.pullPolicy }}
           env:
             - name: {{ .Values.postgres.env.db_user}}
               valueFrom:
                 secretKeyRef:
-                  name: {{ .Values.credentials.name }}
+                  name: {{ .Release.Name}}-{{ .Values.credentials.name }}
                   key: {{ .Values.credentials.postgres.user}}
             - name: {{ .Values.postgres.env.db_pass }}
               valueFrom:
                 secretKeyRef:
-                  name: {{ .Values.credentials.name }}
+                  name: {{ .Release.Name}}-{{ .Values.credentials.name }}
                   key: {{ .Values.credentials.postgres.password}}
             - name: {{ .Values.postgres.env.db_name }}
               value: {{ .Values.postgres.env.name }}
           ports:
-            - containerPort: {{ .Values.postgres.container.port }}
+            - containerPort: {{ .Values.postgres.port }}
           volumeMounts:
             - name: {{ .Values.postgres.volumeClaim.name }}
               mountPath: {{ .Values.postgres.dataPath }}
