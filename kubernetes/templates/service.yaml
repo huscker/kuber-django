@@ -1,23 +1,24 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: django-service
+  name: {{ .Release.Name }}-{{ .Values.django.service.name }}
 spec:
   selector:
-    app: django
+    app: {{ .Values.django.labels.app }}
   ports:
     - protocol: TCP
-      port: 80
-      targetPort: 8000
+      port: {{ .Values.service.port }}
+      targetPort: {{ .Values.django.container.port }}
 ---
 kind: Service
 apiVersion: v1
 metadata:
-  name: postgres-service
+  name: {{ .Release.Name }}-{{ .Values.postgres.service.name }}
 spec:
   selector:
-    app: postgres
+    app: {{ .Values.django.labels.app }}
+    backend: {{ .Values.postgres.labels.backend }}
   ports:
     - protocol: TCP
-      port: 5432
-      targetPort: 5432
+      port: {{ .Values.postgres.service.port }}
+      targetPort: {{ .Values.postgres.service.port }}

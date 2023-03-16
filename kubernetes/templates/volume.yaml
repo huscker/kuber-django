@@ -1,14 +1,16 @@
 kind: PersistentVolume
 apiVersion: v1
 metadata:
-  name: postgres-data
+  name: {{ .Release.Name }}-{{ .Values.resources.name }}
 spec:
-  storageClassName: standard
+  storageClassName: {{ .Values.resources.storages.postgres.storageClass }}
   capacity:
-    storage: 3Gi
-  volumeMode: Filesystem
-  persistentVolumeReclaimPolicy: Retain
+    storage: {{ .Values.resources.storages.postgres.capacity }}
+  volumeMode: {{ .Values.resources.storages.postgres.volumeMode }}
+  persistentVolumeReclaimPolicy: {{ .Values.resources.storages.postgres.reclaimPolicy }}
   accessModes:
-    - ReadWriteOnce
+  {{- range $mode := .Values.resources.storages.postgres.accessModes }}
+    - {{ $mode }}
+  {{- end}}
   hostPath:
-    path: /mnt/data
+    path: {{ .Values.resources.storages.postgres.path }}
