@@ -32,4 +32,4 @@ spec:
             - name: {{ .Values.django.env.db_name }}
               value: {{ .Values.postgres.env.name }}
             - name: {{ .Values.django.env.db_host }}
-              value: {{ .Release.Name }}-{{ .Values.postgres.service.name }}
+              value: headless-svc-{{ .Values.postgres.service.name }}

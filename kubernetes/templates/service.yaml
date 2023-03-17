@@ -10,14 +10,14 @@ spec:
       port: {{ .Values.django.service.port }}
       targetPort: {{ .Values.django.port }}
 ---
-kind: Service
 apiVersion: v1
+kind: Service
 metadata:
-  name: {{ .Release.Name }}-{{ .Values.postgres.service.name }}
+  name: headless-svc-{{ .Values.postgres.service.name }}
 spec:
+  clusterIP: None
   selector:
-    app: {{ .Values.django.labels.app }}
-    backend: {{ .Values.postgres.labels.backend }}
+    app: {{ .Values.postgres.labels.app}}
   ports:
     - protocol: TCP
       port: {{ .Values.postgres.service.port }}
