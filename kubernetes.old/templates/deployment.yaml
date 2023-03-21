@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-{{ .Values.django.name  }}
+spec:
+  replicas: {{ .Values.django.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ .Values.django.labels.app }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.django.labels.app }}
+    spec:
+      containers:
+        - name: {{ .Values.django.labels.app }}
+          image: {{ .Values.django.image.repository}}:{{ .Values.django.image.tag }}
+          imagePullPolicy: {{ .Values.django.image.pullPolicy }}
+          ports:
+            - containerPort: {{ .Values.django.port }}
+          env:
+            - name: {{ .Values.django.env.db_user | upper }}
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Release.Name}}-{{ .Values.credentials.name }}
+                  key: {{ .Values.credentials.postgres.user }}
+            - name: {{ .Values.django.env.db_pass | upper }}
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Release.Name}}-{{ .Values.credentials.name }}
+                  key: {{ .Values.credentials.postgres.password }}
+            - name: {{ .Values.django.env.db_name }}
+              value: {{ .Values.postgres.env.name }}
+            - name: {{ .Values.django.env.db_host }}
+              value: headless-svc-{{ .Values.postgres.service.name }}

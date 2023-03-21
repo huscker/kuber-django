@@ -1,0 +1,6 @@
+image:
+    tag: 15
+    pullPolicy: IfNotPresent
+auth:
+    user: user
+    password: 
