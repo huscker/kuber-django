@@ -1,0 +1,70 @@
+django:
+  name: django-deployment
+  labels:
+    app: django
+  replicaCount: 1
+  image:
+    repository: huscker/django
+    pullPolicy: IfNotPresent
+    tag: latest
+  port: 8000
+  env:
+    db_user: DATABASE_USER
+    db_pass: DATABASE_PASS
+    db_name: DATABASE_NAME
+    db_host: DATABASE_HOST
+  service:
+    name: django-service
+    port: 80
+credentials:
+  name: postgres-credentials
+  type: Opaque
+  postgres:
+    user: user
+    password: password
+postgres:
+  name: postgres-statefulset
+  serviceName: postgres
+  replicaCount: 1
+  port: 5432
+  image:
+    repository: postgres
+    pullPolicy: IfNotPresent
+    tag: 15
+  labels:
+    app: postgres
+  service:
+    name: postgres-service
+    port: 5432
+  env:
+    name: django
+    db_user: POSTGRES_USER
+    db_pass: POSTGRES_PASSWORD
+    db_name: POSTGRES_DB
+  dataPath: /var/lib/postgresql/data
+  volumeClaim:
+    name: postgres-volume-data
+    storage: 1Gi
+    accessModes:
+      - ReadWriteOnce
+ingress:
+  name: django-ingress
+  annotations:
+    - name: nginx.ingress.kubernetes.io/rewrite-target
+      value: /
+  host:
+    name: huscker.com
+    paths:
+      - path: /
+        pathType: Prefix
+resources:
+  storages:
+    postgres:
+      name: postgres-volume
+      storageClass: standard
+      capacity: 3Gi
+      volumeMode: Filesystem
+      reclaimPolicy: Retain
+      accessModes:
+        - ReadWriteOnce
+      path: /mnt/data
